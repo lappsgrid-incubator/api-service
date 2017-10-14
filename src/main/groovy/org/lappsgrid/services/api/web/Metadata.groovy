@@ -6,6 +6,7 @@ import org.lappsgrid.discriminator.Discriminators
 import org.lappsgrid.serialization.Serializer
 import org.lappsgrid.services.api.error.ApiError
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.lappsgrid.serialization.Data
@@ -21,7 +22,7 @@ class Metadata {
     String brandeis = 'http://eldrad.cs-i.brandeis.edu:8080/service_manager'
     String vassar = 'http://vassar.lappsgrid.org'
 
-    @RequestMapping(produces='text/html')
+    @GetMapping(produces='text/html')
     String getHtml(@RequestParam("id") String id) {
         if (id == null) {
             throw new ApiError(HttpStatus.BAD_REQUEST, "Missing ID parameter.")
@@ -53,7 +54,7 @@ class Metadata {
         return writer.toString()
     }
 
-    @RequestMapping(produces = ['application/x-cmdi+xml', 'text/xml'])
+    @GetMapping(produces = ['application/x-cmdi+xml', 'text/xml'])
     String getXml(@RequestParam("id") String id) {
         if (id == null) {
             throw new ApiError(HttpStatus.BAD_REQUEST, "Missing ID parameter.")
@@ -79,7 +80,7 @@ class Metadata {
         return writer.toString()
     }
 
-    @RequestMapping(produces = "application/json")
+    @GetMapping(produces = "application/json")
     String getJson(@RequestParam("id") String id) {
         if (id == null) {
             throw new ApiError(HttpStatus.BAD_REQUEST, "Missing ID parameter.")

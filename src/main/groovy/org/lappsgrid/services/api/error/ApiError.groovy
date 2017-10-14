@@ -1,5 +1,7 @@
 package org.lappsgrid.services.api.error
 
+import org.springframework.http.HttpStatus
+
 /**
  * @author Keith Suderman
  */
@@ -12,10 +14,18 @@ class ApiError extends Throwable {
         super()
     }
 
+    ApiError(HttpStatus status, String message) {
+        this(status.value(), message)
+    }
+
     ApiError(int status, String message) {
         super()
         this.status = status
         this.message = message
+    }
+
+    ApiError(HttpStatus status, String message, Throwable t) {
+        this(status.value(), message, t)
     }
 
     ApiError(int status, String message, Throwable exception) {

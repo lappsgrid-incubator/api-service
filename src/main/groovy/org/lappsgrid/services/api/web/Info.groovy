@@ -1,6 +1,7 @@
 package org.lappsgrid.services.api.web
 
 import org.lappsgrid.services.api.util.HTML
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
@@ -11,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class Info {
 
-    @RequestMapping(path="/")
+    @GetMapping("/")
     String root() {
         return info()
     }
 
-    @RequestMapping(path="/info", method = RequestMethod.GET)
+    @GetMapping("/info")
     String info() {
         return HTML.render('layout', 'LAPPS Grid') {
             h1 'LAPPS Grid HTML API'

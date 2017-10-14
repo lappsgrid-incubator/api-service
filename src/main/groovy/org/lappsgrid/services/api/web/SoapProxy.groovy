@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.*
 @Slf4j('logger')
 @RestController
 class SoapProxy {
-    @RequestMapping(path="/soap-proxy", method = RequestMethod.POST)
+    @PostMapping(path="/soap-proxy", consumes = 'text/plain')
     String post(@RequestParam(name="id", required = true) String id, @RequestBody String entity) {
+
         String url
         if (id == 'localhost') {
             logger.debug("id is localhost")
@@ -24,16 +25,18 @@ class SoapProxy {
             logger.debug("calling vassar service")
             url = "http://vassar.lappsgrid.org/invoker/${id}"
         }
-        else {
+        else if (id.startsWith('brandeis')){
             logger.debug("calling brandeis service")
             url = "http://eldrad.cs-i.brandeis.edu:8080/service_manager/invoker/${id}"
+        }
+        else {
+            throw new ApiError(HttpStatus.BAD_REQUEST, "Invalid serivce ID.")
         }
 
         String username = 'tester'
         String password = 'tester'
 
         logger.info "Proxying ${url}"
-
         ServiceClient client = new ServiceClient(url, username, password)
         String json
         try {
@@ -41,12 +44,12 @@ class SoapProxy {
         }
         catch(Throwable t) {
             logger.error("Error invoking the service", t)
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error executing the client.', t)
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, 'Error executing the client.')
         }
         return json
     }
 
-    @RequestMapping(path='/soap-proxy', method=RequestMethod.GET)
+    @GetMapping('/soap-proxy')
     String get() {
         HTML.render('layout', 'Soap Proxy') {
             h1 "LAPPS Grid Soap Proxy"

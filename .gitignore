@@ -3,4 +3,5 @@
 *.iws
 *.ipr
 
+**/*.jar
 target/

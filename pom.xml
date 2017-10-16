@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.lappsgrid.services</groupId>
     <artifactId>api-services</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>LAPPS Grid API Service (Spring Boot)</name>
     <properties>

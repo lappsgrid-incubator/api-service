@@ -1,6 +1,7 @@
 package org.lappsgrid.services.api.web
 
 import groovy.json.JsonBuilder
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.lappsgrid.services.api.error.ApiError
 import org.lappsgrid.services.api.util.HTML
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * @author Keith Suderman
+ *
  */
 @Slf4j('logger')
 @RestController
@@ -33,7 +34,7 @@ class Services {
 
     @GetMapping(path="/services", produces = 'text/html')
     String services() {
-        return HTML.render('layout', 'Services') {
+        return HTML.render('main', 'Services') {
             h1 'Service Nodes'
             p 'There are currently two main nodes running LAPPS Grid services.'
             ol {
@@ -56,30 +57,9 @@ class Services {
 
         logger.debug("Generate HTML for Vassar services.")
         Map data = vassar(id, name)
-        return HTML.render('layout', 'Vassar Node') {
-            h1 "LAPPS services on the Vassar node"
-            p "Total Services Registered: ${data.totalCount}"
-            table {
-                thead {
-                    th 'ID'
-                    th 'Name'
-                    th 'Metadata'
-                }
-                tbody {
-                    data.elements.each { e->
-                        String u = "/metadata?id=${e.serviceId}"
-                        String handler = "window.open('$u', '_self')"
-                        tr {
-                            td e.serviceId
-                            td e.serviceName
-                            td {
-                                button(onclick:"$handler", 'View')
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        data.title = 'Vassar Node'
+        data.name = 'Vassar'
+        return HTML.render('services', data)
     }
 
     @GetMapping(path="/services/vassar", produces = 'application/json')
@@ -91,7 +71,7 @@ class Services {
         return new JsonBuilder(data).toString()
     }
 
-    protected Object vassar(String id, String name) throws ApiError {
+    protected Map vassar(String id, String name) throws ApiError {
 
         if (configuration == null) {
             throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "This service has not been properly configured.")
@@ -127,30 +107,8 @@ class Services {
     {
         logger.debug("Generating HTML for Brandeis services.")
         Map data = brandeis(id, name)
-        return HTML.render('layout', 'Vassar Node') {
-            h1 "LAPPS services on the Brandeis node"
-            p "Total Services Registered: ${data.totalCount}"
-            table {
-                thead {
-                    th 'ID'
-                    th 'Name'
-                    th 'Metadata'
-                }
-                tbody {
-                    data.elements.each { e->
-                        String u = "/metadata?id=${e.serviceId}"
-                        String handler = "window.open('$u', '_self')"
-                        tr {
-                            td e.serviceId
-                            td e.serviceName
-                            td {
-                                button(onclick:"$handler", 'View')
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        data.name = 'Brandeis'
+        return HTML.render('services', data)
     }
 
     @GetMapping(path="/services/brandeis", produces = 'application/json')

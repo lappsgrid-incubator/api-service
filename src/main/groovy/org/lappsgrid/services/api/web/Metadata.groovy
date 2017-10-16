@@ -13,7 +13,7 @@ import org.lappsgrid.serialization.Data
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * @author Keith Suderman
+ *
  */
 @RestController
 @RequestMapping("/metadata")

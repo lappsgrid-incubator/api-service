@@ -1,5 +1,6 @@
 package org.lappsgrid.services.api.web
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.lappsgrid.client.ServiceClient
 import org.lappsgrid.services.api.error.ApiError
@@ -8,11 +9,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 /**
- * @author Keith Suderman
+ *
  */
 @Slf4j('logger')
 @RestController
 class SoapProxy {
+    @CompileStatic
     @PostMapping(path="/soap-proxy", consumes = 'text/plain')
     String post(@RequestParam(name="id", required = true) String id, @RequestBody String entity) {
 

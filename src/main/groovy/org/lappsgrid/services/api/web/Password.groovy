@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.security.SecureRandom
 
 /**
- * @author Keith Suderman
+ *
  */
 @RestController
 class Password {

@@ -1,10 +1,12 @@
 package org.lappsgrid.services.api.error
 
+import groovy.transform.CompileStatic
 import org.springframework.http.HttpStatus
 
 /**
- * @author Keith Suderman
+ *
  */
+@CompileStatic
 class ApiError extends Throwable {
     int status
     String message

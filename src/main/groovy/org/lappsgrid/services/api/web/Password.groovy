@@ -2,14 +2,16 @@ package org.lappsgrid.services.api.web
 
 import com.sun.org.apache.regexp.internal.RE
 import org.lappsgrid.services.api.error.ApiError
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 import java.security.SecureRandom
 
 /**
- * @author Keith Suderman
+ *
  */
 @RestController
 class Password {
@@ -24,7 +26,7 @@ class Password {
             hex : "0123456789abcdef"
     ]
 
-    @RequestMapping(path="/password", produces = 'text/plain')
+    @GetMapping(path="/password", produces = 'text/plain')
     String password(
             @RequestParam(name='type', required=false) String type,
             @RequestParam(name='chars', required = false) String chars,
@@ -47,5 +49,10 @@ class Password {
             buffer << chars.charAt(random.nextInt(chars.length()));
         }
         return buffer.toString()
+    }
+
+    @GetMapping(path='/uuid', produces = 'text/plain')
+    String uuid() {
+        return UUID.randomUUID()
     }
 }

@@ -1,12 +1,21 @@
 package org.lappsgrid.services.api.util
 
+import groovy.transform.CompileStatic
 import groovy.xml.MarkupBuilder
 
 /**
- * @author Keith Suderman
+ *
  */
+@CompileStatic
 class HTML {
-    static String render(String layout, String title, Closure content) {
+    static String render(String layout, String title, Closure content)  {
+        Map data = [:]
+        data.title = title
+        data.content = content
+        return render(layout, data)
+    }
+
+    static String render(String layout, Map data) {
         InputStream stream = HTML.getResourceAsStream("/templates/${layout}.template");
         if (stream == null) {
             return "Unable to load the $layout template"
@@ -17,8 +26,7 @@ class HTML {
 
         Binding binding = new Binding()
         binding.setVariable('html', html)
-        binding.setVariable('title', title)
-        binding.setVariable('content', content)
+        binding.setVariable('data', data)
 
         GroovyShell shell = new GroovyShell(binding)
         Script script = shell.parse(new InputStreamReader(stream))

@@ -1,5 +1,6 @@
 package org.lappsgrid.services.api.util
 
+import groovy.transform.CompileStatic
 import jp.go.nict.langrid.client.RequestAttributes
 import jp.go.nict.langrid.client.soap.SoapClientFactory
 import jp.go.nict.langrid.service_1_2.foundation.MatchingCondition
@@ -10,9 +11,8 @@ import jp.go.nict.langrid.service_1_2.foundation.servicemanagement.ServiceManage
 /**
  * The ServiceHandler class the does the actual work of querying a ServiceManager instance
  * for its list of services.
- *
- * @author Keith Suderman
  */
+//@CompileStatic
 class ServiceHandler {
 
     String url
@@ -20,7 +20,7 @@ class ServiceHandler {
     String password
     String node
 
-    def params
+    Map<String, String> params
 
     Map searchTerms
 
@@ -36,9 +36,9 @@ class ServiceHandler {
 
     Map handle() {
 
-        def conditions = new MatchingCondition[params.size()]
+        MatchingCondition[] conditions = new MatchingCondition[params.size()]
         int i = 0
-        params.each { name,value ->
+        params.each { String name,String value ->
             name = searchTerms[name] ?: name
             conditions[i] = new MatchingCondition(name, value, "PARTIAL")
             ++i

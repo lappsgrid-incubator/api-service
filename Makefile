@@ -2,7 +2,7 @@ ROOT=$(shell pwd)
 JAR=api.jar
 CSS=src/main/resources/style/main.css
 
-war:
+jar:
 	mvn package
 
 clean:

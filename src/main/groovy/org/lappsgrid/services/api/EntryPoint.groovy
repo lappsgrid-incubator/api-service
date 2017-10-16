@@ -6,7 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.support.SpringBootServletInitializer
 
 /**
- * @author Keith Suderman
+ *
  */
 @SpringBootApplication
 class EntryPoint {

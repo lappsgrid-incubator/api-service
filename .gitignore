@@ -3,4 +3,6 @@
 *.iws
 *.ipr
 
+src/main/docker/*.jar
+**/*.jar
 target/

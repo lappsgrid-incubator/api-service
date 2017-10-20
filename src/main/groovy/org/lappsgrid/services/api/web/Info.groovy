@@ -1,5 +1,6 @@
 package org.lappsgrid.services.api.web
 
+import org.lappsgrid.services.api.Version
 import org.lappsgrid.services.api.util.HTML
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,6 +16,11 @@ class Info {
     @GetMapping("/")
     String root() {
         return info()
+    }
+
+    @GetMapping("/version")
+    String version() {
+        return Version.getVersion()
     }
 
     @GetMapping("/info")
@@ -65,6 +71,12 @@ class Info {
                         td 'POST'
                         td 'application/json'
                         td "A thin wrapper around Groovy's JsonBuilder that generates JSON from a Groovy DSL"
+                    }
+                    tr {
+                        td { a href:/version, '/version''}
+                        td 'GET'
+                        td 'text/plain'
+                        td "Returns the version string as defined in the project's pom.xml file."
                     }
                     tr {
                         td { a href:'/password', '/password' }

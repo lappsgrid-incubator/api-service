@@ -44,7 +44,7 @@ class Services {
             p 'Other nodes may be brought online in the future.'
             p {
                 span { b 'Note:'}
-                span '''The webservices may be running on other servers. The Brandeis 
+                span '''There may be LAPPS services running on other servers. The Brandeis 
                 and Vassar nodes are simply the servers that are running Service Manager
                 instances.'''
             }

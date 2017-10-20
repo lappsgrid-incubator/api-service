@@ -1,22 +1,23 @@
 # LAPPS Grid API Services
 
-The services available at `http://api.lappsgrid.org` are typically proof-of-concept prototype services implemented as [Groovlets](http://docs.groovy-lang.org/latest/html/documentation/servlet-userguide.html).  A Groovlet is simply a Groovy script that is run inside a Java Servlet container.  Currently calls to `http://api.lappsgrid.org` will forward to a Jetty server (see server.groovy) that serves these scripts as web services.
+The services available at `https://api.lappsgrid.org` are typically proof-of-concept prototype services implemented as [Groovlets](http://docs.groovy-lang.org/latest/html/documentation/servlet-userguide.html).  A Groovlet is simply a Groovy script that is run inside a Java Servlet container.  Currently calls to `https://api.lappsgrid.org` will forward to a Jetty server (see server.groovy) that serves these scripts as web services.
 
 **Note** The Groovlets repository has a GitHub webhook enabled so pushing code to the *master* branch automatically deploys these services to api.lappsgrid.org. 
 
 ### Service Index
-- [password](#password) - generates random strings for use as passwords or secret keys
-- [uuid](#uuid) - generates a type 4 UUID
-- [services](#services) - list all services installed on a particular node
-- [metadata](#metadata) - fetch the metadata for a given service
-- [soap-proxy](#soap-proxy) - RESTful proxy for LAPPS SOAP services
-- [json-compiler](#json-compiler) - Compiles the LAPPS Alternate Syntax into JSON
+- [password](#password) - generates random strings for use as passwords or secret keys.
+- [uuid](#uuid) - generates a type 4 UUID.
+- [services](#services) - list all services installed on a particular node.
+- [metadata](#metadata) - fetch the metadata for a given service.
+- [soap-proxy](#soap-proxy) - RESTful proxy for LAPPS SOAP services.
+- [json-compiler](#json-compiler) - Compiles the LAPPS Alternate Syntax into JSON.
+- [version](#version) - Returns the version defined in the project's pom.xml file.
 
 # Available Services
 
 <a name="password"></a>
 
-## http://api.lappsgrid.org/password
+## https://api.lappsgrid.org/password
 
 The password service uses a cryptographically secure random number generator to produce a random sequence of characters.  Use the password service any time a secure password and/or security key is required.
 
@@ -55,20 +56,20 @@ The *safe* type is intended to be used to generate passwords or keys that can be
 **Examples**
 
 ```
-> curl http://api.lappsgrid.org/password
+> curl https://api.lappsgrid.org/password
 =F9sXKGn2lteDdvk
 
-> curl http://api.lappsgrid.org/password?type=hex&length=32
+> curl https://api.lappsgrid.org/password?type=hex&length=32
 a0edc2709c4ebb9ee43f35415c12af5b
 
-> curl http://api.lappsgrid.org/password?chars=01&length=32
+> curl https://api.lappsgrid.org/password?chars=01&length=32
 00001001101101111101000000001001
 ```
 The password service will always produce at least 16 characters of output.
 
 <a name="uuid"></a>
 
-## http://api.lappsgrid.org/uuid
+## https://api.lappsgrid.org/uuid
 
 Generates a *Type 4* UUID (Universally Unique IDentifier) according to [RFC 4122](https://www.ietf.org/rfc/rfc4122.txt). In practice the service simply calls `java.util.UUID.randomUUID().toString()` 
 
@@ -92,14 +93,14 @@ Generates a *Type 4* UUID (Universally Unique IDentifier) according to [RFC 4122
 **Example**
 
 ```bash
-> curl http://api.lappsgrid.org/uuid
+> curl https://api.lappsgrid.org/uuid
 
 d085f907-0c00-4dd6-b500-5f98cbc0827f
 ```
 
 <a name="services"></a>
   
-## http://api.lappsgrid.org/services
+## https://api.lappsgrid.org/services
 
 Display the services installed on a service manager instance.
 
@@ -148,13 +149,13 @@ If no key/value pairs are specified as search terms then all services registered
 **Example**
 
 ```
-curl -H 'Accept: text/html' http://api.lappsgrid.org/service/brandeis
-curl http://api.lappsgrid.org/service/vassar?serviceName=gate
+curl -H 'Accept: text/html' https://api.lappsgrid.org/service/brandeis
+curl https://api.lappsgrid.org/service/vassar?serviceName=gate
 ```
 
 <a name="metadata"></a>
   
-## http://api.lappsgrid.org/metadata
+## https://api.lappsgrid.org/metadata
 
 Display metadata about a single service.
 
@@ -184,13 +185,13 @@ If an `Accept` header is not specified `application/json` will be returned.
 **Example**
 
 ```
-curl http://api.lappsgrid.org/metadata?id=anc:gate.tokenzier_2.2.0
-curl -H 'Accept: application/x-cmdi+xml' http://api.lappsgrid.org/metadata?id=anc:stanford.tagger_2.0.0
+curl https://api.lappsgrid.org/metadata?id=anc:gate.tokenzier_2.2.0
+curl -H 'Accept: application/x-cmdi+xml' https://api.lappsgrid.org/metadata?id=anc:stanford.tagger_2.0.0
 ```
 
 <a name="soap-proxy"></a>
   
-## http://api.lappsgrid.org/soap-proxy
+## https://api.lappsgrid.org/soap-proxy
 
 A RESTful proxy service for LAPPS Grid SOAP services.
   
@@ -222,7 +223,7 @@ A RESTful proxy service for LAPPS Grid SOAP services.
 **Example**
 
 ```
-> curl -i -H 'Content-Type: text/plain' -X POST -d 'Karen flew to New York.' http://api.lappsgrid.org/soap-proxy?id=anc:wrap.lif_1.0.0
+> curl -i -H 'Content-Type: text/plain' -X POST -d 'Karen flew to New York.' https://api.lappsgrid.org/soap-proxy?id=anc:wrap.lif_1.0.0
 
 HTTP/1.1 200 
 Server: nginx/1.4.6 (Ubuntu)
@@ -250,7 +251,7 @@ Connection: keep-alive
 
 <a name="json-compiler"></a>
   
-## http://api.lappsgrid.org/json-compiler
+## https://api.lappsgrid.org/json-compiler
 
 Compiles the [LAPPS Alternative Syntax](https://github.com/oanc/org.anc.json.schema-compiler)
 into an equivalent JSON document.
@@ -277,7 +278,7 @@ into an equivalent JSON document.
 </table>
 
 ```
-> curl -i -X POST -H "Content-type: text/plain" --data "type object; properties { name string }" http://api.lappsgrid.org/json-compiler
+> curl -i -X POST -H "Content-type: text/plain" --data "type object; properties { name string }" https://api.lappsgrid.org/json-compiler
 
 HTTP/1.1 200 OK
 Server: nginx/1.4.6 (Ubuntu)
@@ -293,3 +294,35 @@ Connection: keep-alive
     }
 }
 ```
+
+<a name="version"></a>
+
+## https://api.lappsgrid.org/version
+
+Return the version string defined in the pom.xml file. 
+
+<table>
+    <tr>
+        <td style="width:20%"><b>Methods</b></td>
+        <td>GET</td>
+     </tr>
+     <tr>
+        <td><b>URL</b></td>
+        <td>/version<br/></td>
+     </tr>
+     <tr>
+        <td><b>Returns</b></td>
+        <td>
+            text/plain
+        </td>
+     </tr>
+</table>
+
+**Example**
+
+```bash
+> curl https://api.lappsgrid.org/version
+
+1.0.1
+```
+

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class SoapProxy {
     @CompileStatic
-    @PostMapping(path="/soap-proxy", consumes = 'text/plain')
+    @PostMapping(path="/soap-proxy", consumes = ['text/plain', 'application/json', 'text/xml'])
     String post(@RequestParam(name="id", required = true) String id, @RequestBody String entity) {
 
         String url
@@ -53,10 +53,28 @@ class SoapProxy {
 
     @GetMapping('/soap-proxy')
     String get() {
-        HTML.render('layout', 'Soap Proxy') {
+        HTML.render('main', 'Soap Proxy') {
             h1 "LAPPS Grid Soap Proxy"
             p "The soap-proxy service provides a REST-like HTTP interface to the LAPPS Grid SOAP services."
+            p {
+                span "The "
+                em "soap-proxy"
+                span "service accepts a single url parameter "
+                em "id"
+                span " which is the service id of the service to invoke. To see a list of all available services and their service ids visit "
+                a(href:'https://api.lappsgrid.org/services/brandeis', 'https://api.lappsgrid.org/services/brandeis')
+                span " or "
+                a(href:'https://api.lappsgrid.org/services/vassar', 'https://api.lappsgrid.org/services/vassar')
+                span "."
+            }
+            strong 'Example'
+            br()
+            p 'https://api.lappsgrid.org/soap-proxy?id=anc:stanford.tokenier_2.1.0'
         }
+    }
+
+    String link(ref) {
+        return
     }
 
 }

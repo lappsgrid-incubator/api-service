@@ -149,8 +149,8 @@ If no key/value pairs are specified as search terms then all services registered
 **Example**
 
 ```
-curl -H 'Accept: text/html' https://api.lappsgrid.org/service/brandeis
-curl https://api.lappsgrid.org/service/vassar?serviceName=gate
+curl -H 'Accept: text/html' https://api.lappsgrid.org/services/brandeis
+curl https://api.lappsgrid.org/services/vassar?serviceName=gate
 ```
 
 <a name="metadata"></a>
@@ -185,7 +185,7 @@ If an `Accept` header is not specified `application/json` will be returned.
 **Example**
 
 ```
-curl https://api.lappsgrid.org/metadata?id=anc:gate.tokenzier_2.2.0
+curl https://api.lappsgrid.org/metadata?id=anc:gate.tokenizer_2.2.0
 curl -H 'Accept: application/x-cmdi+xml' https://api.lappsgrid.org/metadata?id=anc:stanford.tagger_2.0.0
 ```
 

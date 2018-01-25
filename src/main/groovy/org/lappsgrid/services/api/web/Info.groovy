@@ -55,13 +55,13 @@ class Info {
                         td 'lists the SOAP services available on the Vassar node.'
                     }
                     tr {
-                        td '/metadata?id=<service ID>'
+                        td '/metadata?id=:ID'
                         td 'GET'
                         td 'text/html, application/json, application/x-cmdi+xml'
                         td 'displays the metadata for the service.'
                     }
                     tr {
-                        td '/soap-proxy?id=<service ID>'
+                        td '/soap-proxy?id=:ID'
                         td 'POST'
                         td '*/*'
                         td 'A REST proxy for LAPPS SOAP services'
@@ -73,7 +73,7 @@ class Info {
                         td "A thin wrapper around Groovy's JsonBuilder that generates JSON from a Groovy DSL"
                     }
                     tr {
-                        td { a href:/version, '/version''}
+                        td { a href:'/version', '/version'}
                         td 'GET'
                         td 'text/plain'
                         td "Returns the version string as defined in the project's pom.xml file."
@@ -91,6 +91,11 @@ class Info {
                         td 'Generates a type 4 UUID.  This just calls the UUID.randomUUID() Java method.'
                     }
                 }
+            }
+            p {
+                span 'See the '
+                a href:'https://github.com/lappsgrid-incubator/api-service', 'GitHub repository'
+                span ' for more detailed usage instructions.'
             }
         }
     }

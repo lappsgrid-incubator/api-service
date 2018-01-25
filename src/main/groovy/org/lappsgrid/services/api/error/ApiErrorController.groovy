@@ -35,10 +35,10 @@ class ApiErrorController implements ErrorController {
     String errorHtml(HttpServletRequest request, HttpServletResponse response) {
         int status = response.status
         Map<String,Object> attributes = getErrorAttributes(request, true)
-        String error = (String) errorAttributes.get("error");
-        String message = (String) errorAttributes.get("message");
-        String timeStamp = errorAttributes.get("timestamp").toString();
-        String trace = (String) errorAttributes.get("trace");
+        String error = (String) attributes.get("error");
+        String message = (String) attributes.get("message");
+        String timeStamp = attributes.get("timestamp").toString();
+        String trace = (String) attributes.get("trace");
         return HTML.render('main', 'Something is amiss...') {
             h1 error
             p message

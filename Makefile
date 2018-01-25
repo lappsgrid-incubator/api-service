@@ -3,6 +3,7 @@ JAR=api.jar
 CSS=src/main/resources/style/main.css
 
 jar:
+	mvn compile
 	mvn package
 
 clean:

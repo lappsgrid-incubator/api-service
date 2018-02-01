@@ -5,13 +5,14 @@ The services available at `https://api.lappsgrid.org` are typically proof-of-con
 **Note** The Groovlets repository has a GitHub webhook enabled so pushing code to the *master* branch automatically deploys these services to api.lappsgrid.org. 
 
 ### Service Index
-- [password](#password) - generates random strings for use as passwords or secret keys.
-- [uuid](#uuid) - generates a type 4 UUID.
-- [services](#services) - list all services installed on a particular node.
-- [metadata](#metadata) - fetch the metadata for a given service.
-- [soap-proxy](#soap-proxy) - RESTful proxy for LAPPS SOAP services.
-- [json-compiler](#json-compiler) - Compiles the LAPPS Alternate Syntax into JSON.
-- [version](#version) - Returns the version defined in the project's pom.xml file.
+- [password](#password) - generates random strings for use as passwords or secret keys
+- [uuid](#uuid) - generates a type 4 UUID
+- [services](#services) - list all services installed on a particular node
+- [metadata](#metadata) - fetch the metadata for a given service
+- [soap-proxy](#soap-proxy) - RESTful proxy for LAPPS SOAP services
+- [json-compiler](#json-compiler) - compiles the LAPPS Alternate Syntax into JSON
+- [json-validator](#validator) - validates JSON documents agains the LAPPS JSON Schema
+- [version](#version) - returns the version defined in the project's pom.xml file
 
 # Available Services
 
@@ -277,6 +278,8 @@ into an equivalent JSON document.
      </tr>
 </table>
 
+**Example**
+
 ```
 > curl -i -X POST -H "Content-type: text/plain" --data "type object; properties { name string }" https://api.lappsgrid.org/json-compiler
 
@@ -292,6 +295,87 @@ Connection: keep-alive
     "properties": {
         "name": "string"
     }
+}
+```
+
+<a name="validator"></a>
+
+## https://api.lappsgrid.org/validate
+
+Validates JSON documents against the JSON schema for [LIF documents](http://vocab.lappsgrid.org/schema/lif-schema.json) or the schema for [service metadata](http://vocab.lappsgrid.org/schema/service-schema.json).
+
+<table>
+    <tr>
+        <td style="width:20%"><b>Methods</b></td>
+        <td>POST</td>
+     </tr>
+     <tr>
+        <td><b>URL</b></td>
+        <td>/validate/data<br/>
+        /validate/container<br/>
+        /validate/metadata
+        </td>
+     </tr>
+     <tr>
+        <td><b>Accepts</b></td>
+        <td>application/ld+json</td>
+     </tr>
+     <tr>
+        <td><b>Returns</b></td>
+        <td>
+            application/json
+        </td>
+     </tr>
+</table>
+
+**Example**
+
+```
+> curl -H 'Content-type: application/ld+json' -d @input.lif https://api.lappsgrid.org/validate/data
+{
+    "level": "ok",
+    "message": "No problems found."
+}
+```
+
+<table>
+    <tr>
+        <td style="width:20%"><b>Methods</b></td>
+        <td>GET</td>
+     </tr>
+     <tr>
+        <td><b>URL</b></td>
+        <td>/validate/metadata</td>
+     </tr>
+     <tr>
+        <td><b>Returns</b></td>
+        <td>
+            application/json
+        </td>
+     </tr>
+</table>
+
+**URL Parameters**
+
+- **id** the ID of the service to be validated.
+- **url** the URL of a LAPPS service
+
+When sending a GET request include either the service ID **or** the URL of a LAPPS service. It is an error to include both the *id* and *url* URL parameters.
+                                                                                            
+
+**Example**
+
+```
+> curl https://api.lappsgrid.org/validate/metadata?id=anc:stanford.tokenizer_2.1.0
+{
+    "level": "ok",
+    "message": "Metadata passed validation."
+}
+
+> curl https://api.lappsgrid.org/validate/metadata?url=http://vassar.lappsgrid.org/invoker/anc:stanford.tokenizer_2.1.0
+{
+    "level": "ok",
+    "message": "Metadata passed validation."
 }
 ```
 

@@ -27,7 +27,8 @@ html.html {
             mkp.yieldUnescaped license
 
             String year = new Date().format('yyyy')
-            p class:'copyright', "Copyright $year The Language Applications Grid."
+            char copy = 0xA9
+            p class:'copyright', "Copyright $copy $year The Language Applications Grid."
         }
     }
 }

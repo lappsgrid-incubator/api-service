@@ -73,6 +73,24 @@ class Info {
                         td "A thin wrapper around Groovy's JsonBuilder that generates JSON from a Groovy DSL"
                     }
                     tr {
+                        td '/validate/container'
+                        td 'POST'
+                        td 'application/json'
+                        td "Validates the JSON for a LIF Container object."
+                    }
+                    tr {
+                        td '/validate/data'
+                        td 'POST'
+                        td 'application/json'
+                        td "Validates LAPPS Data object with a LIF Container payload."
+                    }
+                    tr {
+                        td '/validate/metadata'
+                        td 'POST | GET'
+                        td 'application/json'
+                        td 'Validates the metadata returned by a LAPPS service.'
+                    }
+                    tr {
                         td { a href:'/version', '/version'}
                         td 'GET'
                         td 'text/plain'

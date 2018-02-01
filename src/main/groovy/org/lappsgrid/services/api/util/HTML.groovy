@@ -16,7 +16,7 @@ class HTML {
     }
 
     static String render(String layout, Map data) {
-        InputStream stream = HTML.getResourceAsStream("/templates/${layout}.template");
+        InputStream stream = HTML.getResourceAsStream("/templates/${layout}.layout");
         if (stream == null) {
             return "Unable to load the $layout template"
         }

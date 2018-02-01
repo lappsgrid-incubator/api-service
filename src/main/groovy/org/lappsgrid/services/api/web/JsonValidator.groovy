@@ -39,7 +39,7 @@ class JsonValidator {
         metadataValidator = getValidator('/schemas/metadata-schema.json')
     }
 
-    @PostMapping(path='/validate/container', consumes = 'application/json', produces = 'application/json')
+    @PostMapping(path='/validate/container', consumes = ['application/ld+json', 'application/json'], produces = 'application/json')
     String validateContainer(@RequestBody String json) {
         if (instanceValidator == null) {
             throw new NoSchemaException()
@@ -55,11 +55,24 @@ class JsonValidator {
             throw new ValidationException()
         }
         logger.info("Return JSON report.")
-        String result = ((AsJson) report).asJson().toString()
+        String result
+        if (report.success) {
+            Map map = [
+                    level: 'ok',
+                    message: 'No problems found'
+            ]
+            result = Serializer.toJson(map)
+        }
+        else {
+            result = ((AsJson) report).asJson().toString()
+        }
         return JsonOutput.prettyPrint(result)
+
+//        String result = ((AsJson) report).asJson().toString()
+//        return JsonOutput.prettyPrint(result)
     }
 
-    @PostMapping(path='/validate/data', consumes = 'application/json', produces = 'application/json')
+    @PostMapping(path='/validate/data', consumes = ['application/ld+json', 'application/json'], produces = 'application/json')
     String validateData(@RequestBody String json) {
         logger.info("Validating a Data object.")
         Data data = Serializer.parse(json)
@@ -100,7 +113,7 @@ class JsonValidator {
         return new ResponseEntity<String>(response, headers, HttpStatus.OK)
     }
 
-    @PostMapping(path='/validate/metadata', consumes = 'application/json', produces = 'application/json')
+    @PostMapping(path='/validate/metadata', consumes = ['application/ld+json', 'application/json'], produces = 'application/json')
     String validateMetadata(@RequestBody String body) {
         if (metadataValidator == null) {
             throw new NoSchemaException()

@@ -1,6 +1,8 @@
 package org.lappsgrid.services.api.web
 
 import groovy.util.logging.Slf4j
+import org.lappsgrid.serialization.Serializer
+import org.lappsgrid.services.api.util.HTML
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -50,14 +52,14 @@ class Docker {
                         th(colspan:2, org)
                     }
                     modules.each { String module ->
-                        String tags = getTags(org, module) {
-                            tr {
-                                td module
-                                td tags
-                            }
+                        String tags = getTags(org, module)
+                        tr {
+                            td(width:'20%', module)
+                            td tags
                         }
                     }
                 }
+                br()
             }
         }
     }

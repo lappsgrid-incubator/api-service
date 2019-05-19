@@ -61,6 +61,12 @@ class Info {
                         td 'displays the metadata for the service.'
                     }
                     tr {
+                        td { a href:'/docker', '/docker' }
+                        td 'GET'
+                        td 'text/html'
+                        td 'Lists the images available from https://docker.lappsgrid.org'
+                    }
+                    tr {
                         td '/soap-proxy?id=:ID'
                         td 'POST'
                         td '*/*'

@@ -8,3 +8,4 @@ src/main/docker/*.jar
 target/
 VERSION
 src/main/java/**/Version.java
+main.css

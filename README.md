@@ -193,7 +193,7 @@ curl -H 'Accept: application/x-cmdi+xml' https://api.lappsgrid.org/metadata?id=a
 
 <a name="docker"></a>
 
-## https://api.lappgrid.org/docker
+## https://api.lappsgrid.org/docker
 
 List Docker images available from *https://docker.lappsgrid.org*. **NOTE:** There is no Docker Hub style user interface at *docker.lappsgrid.org*.
 

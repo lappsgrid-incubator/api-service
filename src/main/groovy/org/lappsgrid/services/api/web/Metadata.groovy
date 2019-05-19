@@ -41,6 +41,8 @@ class Metadata {
         binding.url = url
         binding.html = new MarkupBuilder(new PrintWriter(writer))
         binding.payload = data.payload
+        binding.serviceId = id
+        binding.json = data.asPrettyJson()
         String license = data.payload.license
         if (license.startsWith('http')) {
             binding.license = "<p><a href='$license'>$license</a></p>"

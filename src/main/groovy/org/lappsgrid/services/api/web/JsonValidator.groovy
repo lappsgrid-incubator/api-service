@@ -4,12 +4,14 @@ import com.github.fge.jsonschema.core.report.ProcessingReport
 import com.github.fge.jsonschema.core.util.AsJson
 import groovy.json.JsonOutput
 import groovy.util.logging.Slf4j
+import org.anc.json.validator.SchemaValidator
 import org.anc.json.validator.Validator
 import org.lappsgrid.api.WebService
 import org.lappsgrid.client.ServiceClient
 import org.lappsgrid.discriminator.Discriminators
 import org.lappsgrid.serialization.Data
 import org.lappsgrid.serialization.Serializer
+import org.lappsgrid.services.api.Version
 import org.lappsgrid.services.api.error.NoSchemaException
 import org.lappsgrid.services.api.error.ValidationException
 import org.lappsgrid.services.api.util.HTML
@@ -31,16 +33,23 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class JsonValidator {
 
+    SchemaValidator schemaValidator
+
     Validator instanceValidator
     Validator metadataValidator
+
+    Map<String,Validator> validators
 
     public JsonValidator() {
         instanceValidator = getValidator('/schemas/lif-schema.json')
         metadataValidator = getValidator('/schemas/metadata-schema.json')
+        validators = [:]
+        schemaValidator = new SchemaValidator()
     }
 
     @PostMapping(path='/validate/container', consumes = ['application/ld+json', 'application/json'], produces = 'application/json')
     String validateContainer(@RequestBody String json) {
+
         if (instanceValidator == null) {
             throw new NoSchemaException()
         }
@@ -59,7 +68,11 @@ class JsonValidator {
         if (report.success) {
             Map map = [
                     level: 'ok',
-                    message: 'No problems found'
+                    message: 'No problems found',
+                    version: [
+                            'Validator service': Version.version,
+                            'org.anc.json.validator.Validator': org.anc.json.validator.Version.version
+                    ]
             ]
             result = Serializer.toJson(map)
         }
@@ -67,15 +80,75 @@ class JsonValidator {
             result = ((AsJson) report).asJson().toString()
         }
         return JsonOutput.prettyPrint(result)
+    }
 
-//        String result = ((AsJson) report).asJson().toString()
-//        return JsonOutput.prettyPrint(result)
+    @PostMapping(path = '/validate', consumes = ['application/json', 'application/ld+json'], produces = 'application/json')
+    String validatePost(@RequestBody String body) {
+        Map data
+        try {
+            data = Serializer.parse(body, HashMap)
+        }
+        catch (Throwable t) {
+            return error(t.message)
+        }
+
+        String schemaUrl
+        Map toValidate
+
+        if (data['$schema']) {
+            schemaUrl = data['$schema']
+            toValidate = data
+        }
+        else if (data?.payload['$schema']) {
+            schemaUrl = data.payload['$schema']
+            toValidate = data.payload
+        }
+        else {
+            return error('No $schema specified in file')
+        }
+
+        Validator validator = getValidatorFromUrl(schemaUrl)
+        if (validator == null) {
+            return error('Unable to get Validator for ' + schemaUrl)
+        }
+        ProcessingReport report
+        try {
+            report = validator.validate(Serializer.toJson(toValidate))
+        }
+        catch (Exception e) {
+            logger.info("Validation failed")
+            throw new ValidationException()
+        }
+        logger.info("Return JSON report.")
+        String result
+        if (report.success) {
+            Map map = [
+                    level: 'ok',
+                    message: 'No problems found',
+                    version: [
+                            'Validator service': Version.version,
+                            'org.anc.json.validator.Validator': org.anc.json.validator.Version.version
+                    ]
+            ]
+            result = Serializer.toJson(map)
+        }
+        else {
+            result = ((AsJson) report).asJson().toString()
+        }
+        return JsonOutput.prettyPrint(result)
     }
 
     @PostMapping(path='/validate/data', consumes = ['application/ld+json', 'application/json'], produces = 'application/json')
     String validateData(@RequestBody String json) {
         logger.info("Validating a Data object.")
-        Data data = Serializer.parse(json)
+        Data data
+        try {
+            data = Serializer.parse(json)
+        }
+        catch (Throwable t) {
+            return error(t.message)
+        }
+
         if (data.discriminator != Discriminators.Uri.LAPPS && data.discriminator != Discriminators.Uri.LIF) {
             logger.warn("Wrong discriminator type: {}", data.discriminator)
             return error('Invalid discriminator.')
@@ -104,10 +177,17 @@ class JsonValidator {
         }
         WebService service = new ServiceClient(url, 'tester', 'tester')
         String metadata = service.getMetadata()
-        if (metadata.contains(Discriminators.Uri.ERROR)) {
+        Map map = Serializer.parse(metadata, HashMap)
+        if (map.discriminator == Discriminators.Uri.ERROR) {
             return new ResponseEntity<String>('Unable to retrieve metadata from service', HttpStatus.BAD_REQUEST)
         }
-        String response = validateMetadata(metadata)
+        String response
+        if (map.payload['$schema']) {
+            response = validatePost(metadata)
+        }
+        else {
+            response = validateMetadata(metadata)
+        }
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
         return new ResponseEntity<String>(response, headers, HttpStatus.OK)
@@ -118,16 +198,22 @@ class JsonValidator {
         if (metadataValidator == null) {
             throw new NoSchemaException()
         }
+
         logger.info("Validating metadata.")
         Data data = Serializer.parse(body)
+        if (data.discriminator == Discriminators.Uri.ERROR) {
+            return body
+        }
+
         if (data.discriminator != Discriminators.Uri.META) {
             logger.warn("Wrong discriminator type: {}", data.discriminator)
             return error("Invalid discriminator: ${data.discriminator}")
         }
 
+        Validator validator = metadataValidator
         ProcessingReport report
         try {
-            report = metadataValidator.validate(Serializer.toJson(data.payload))
+            report = validator.validate(Serializer.toJson(data.payload))
         }
         catch (Exception e) {
             logger.info("Validation failed")
@@ -138,7 +224,11 @@ class JsonValidator {
         if (report.success) {
             Map map = [
                     level: 'ok',
-                    message: 'Metadata passed validation.'
+                    message: 'Metadata passed validation.',
+                    version: [
+                            'Validator service': Version.version,
+                            'org.anc.json.validator.Validator': org.anc.json.validator.Version.version
+                    ]
             ]
             result = Serializer.toJson(map)
         }
@@ -148,8 +238,44 @@ class JsonValidator {
         return JsonOutput.prettyPrint(result)
     }
 
+    @PostMapping(path="/validate/schema", consumes = ['text/plain', 'application/json'], produces = 'application/json')
+    String validateSchema(@RequestBody String body) {
+        logger.info("Validating schema.")
+        SchemaValidator validator = schemaValidator
+        ProcessingReport report
+        try {
+            report = validator.validate(body)
+        }
+        catch (Exception e) {
+            logger.info("Validation failed")
+            throw new ValidationException()
+        }
+        logger.info("Return JSON report.")
+        String result
+        if (report.success) {
+            Map map = [
+                    level: 'ok',
+                    message: 'Schema passed validation.',
+                    version: [
+                            'Validator service': Version.version,
+                            'org.anc.json.validator.SchemaValidator': org.anc.json.validator.Version.version
+                    ]
+            ]
+            result = Serializer.toJson(map)
+        }
+        else {
+            result = ((AsJson) report).asJson().toString()
+        }
+        return JsonOutput.prettyPrint(result)
+    }
+
+//    @PostMapping(path="/validate/schema", consumes = 'application/json', produces = 'application/json')
+//    String validateSchemaJson(@RequestBody String body) {
+//
+//    }
+
     @GetMapping(path = "/validate")
-    String validate() {
+    String validateGet() {
         return info()
     }
 
@@ -174,6 +300,11 @@ class JsonValidator {
                     th 'Description'
                 }
                 tr {
+                    td '/validate'
+                    td 'POST'
+                    td 'validates an object based on its $schema field'
+                }
+                tr {
                     td '/validate/container'
                     td 'POST'
                     td 'validates a LIF Container object'
@@ -193,6 +324,24 @@ class JsonValidator {
                     td 'GET'
                     td 'metadata to be validated is retrieved directly from the service'
                 }
+                tr {
+                    td '/validate/schema'
+                    td 'POST'
+                    td 'validates a JSON schema against the draft 4 specification'
+                }
+            }
+            h3 'Notes'
+            p {
+                mkp.yieldUnescaped '''The <code>/validate/schema</code> service accepts both the LAPPS
+Grid abstract syntax (LAX) as well as JSON files. When <code>POST</code>ing the abstract syntax with <em>curl</em>
+you <strong>must</strong> use the <code>--data-binary</code> parameter as <em>curl</em> will remove newlines when 
+the <code>-d|--data</code> option is used.
+'''
+            }
+            p {
+                pre '''curl -H "Content-type: text/plain" --data-binary @lif.schema http://api.lappsgrid.org/validate/schema
+curl -H "Content-type: application/json" -d @lif-schema.json http://api.lappsgrid.org/validate/schema
+'''
             }
             h3 'Implementation'
             p {
@@ -227,5 +376,14 @@ curl https://api.lappsgrid.org/validate/metadata?id=anc:stanford.tokenizer_2.1.0
             return null
         }
         return new Validator(url.text)
+    }
+
+    Validator getValidatorFromUrl(String url) {
+        Validator validator = validators[url]
+        if (validator == null) {
+            validator = new Validator(new URL(url).text)
+            validators[url] = validator
+        }
+        return validator
     }
 }

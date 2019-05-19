@@ -1,6 +1,6 @@
 ROOT=$(shell pwd)
 JAR=api.jar
-CSS=src/main/resources/style/main.css
+CSS=src/main/resources/static/style/main.css
 
 jar:
 	mvn compile
@@ -25,6 +25,11 @@ stop:
 
 push:
 	docker push lappsgrid/api-service
+
+deploy:
+	os ssh services /root/services.sh update api
+
+all: clean jar docker push deploy
 
 run:
 	java -jar target/api.jar

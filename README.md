@@ -341,11 +341,35 @@ Validates JSON documents against the JSON schema for [LIF documents](http://voca
 <table>
     <tr>
         <td style="width:20%"><b>Methods</b></td>
+        <td>POST</td>
+     </tr>
+     <tr>
+        <td><b>URL</b></td>
+        <td>/validate/schema</td>
+     </tr>
+     <tr>
+        <td><b>Returns</b></td>
+        <td>
+            application/json
+        </td>
+     </tr>
+</table>
+
+**Examples**
+
+```
+> curl -H "Content-type: text/plain" --data-binary @lif.schema http://api.lappsgrid.org/validate/schema
+```
+
+<table>
+    <tr>
+        <td style="width:20%"><b>Methods</b></td>
         <td>GET</td>
      </tr>
      <tr>
         <td><b>URL</b></td>
-        <td>/validate/metadata</td>
+        <td>/validate/metadata?id=:id <br/>
+        /validate/metadata?url=:url</td>
      </tr>
      <tr>
         <td><b>Returns</b></td>

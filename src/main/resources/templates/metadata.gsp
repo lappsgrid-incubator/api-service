@@ -26,6 +26,14 @@ html.html {
             h2 'License'
             mkp.yieldUnescaped license
 
+            h2 'JSON'
+            pre json
+            p {
+                String u = "https://api.lappsgrid.org/validate/metadata?id=${serviceId}"
+                String validate = "window.open('$u', '_self')"
+                button(class:'button', onclick:"$validate", "Validate")
+            }
+
             String year = new Date().format('yyyy')
             char copy = 0xA9
             p class:'copyright', "Copyright $copy $year The Language Applications Grid."

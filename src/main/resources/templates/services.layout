@@ -20,15 +20,12 @@ html.html {
                 tbody {
                     data.elements.each { e->
                         String u = "/metadata?id=${e.serviceId}"
-                        String u2 = "https://api.lappsgrid.org/validate/metadata?id=${e.serviceId}"
                         String view = "window.open('$u', '_self')"
-                        String validate = "window.open('$u2', '_self')"
                         tr {
                             td e.serviceId
                             td e.serviceName
                             td {
                                 button(onclick:"$view", 'View')
-                                button(onclick:"$validate", 'Validate')
                             }
                         }
                     }

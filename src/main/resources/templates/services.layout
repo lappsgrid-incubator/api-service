@@ -20,12 +20,12 @@ html.html {
                 tbody {
                     data.elements.each { e->
                         String u = "/metadata?id=${e.serviceId}"
-                        String handler = "window.open('$u', '_self')"
+                        String view = "window.open('$u', '_self')"
                         tr {
                             td e.serviceId
                             td e.serviceName
                             td {
-                                button(onclick:"$handler", 'View')
+                                button(onclick:"$view", 'View')
                             }
                         }
                     }
@@ -33,6 +33,7 @@ html.html {
             }
         }
         String year = new Date().format('yyyy')
-        p class:'copyright', "Copyright $year The Language Applications Grid."
+        char copy = 0xA9
+        p class:'copyright', "Copyright $copy $year The Language Applications Grid."
     }
 }

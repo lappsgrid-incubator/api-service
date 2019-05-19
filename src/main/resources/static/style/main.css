@@ -50,6 +50,18 @@ div.content h2 {
 div.content p {
   margin: 10px 20px;
 }
+div.content .button {
+  background-color: #d9eaf2;
+  border: none;
+  color: #003a57;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: larger;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 div.content .first-column {
   width: 15%;
 }

@@ -23,13 +23,27 @@ class Services {
     ConfigObject configuration;
 
     public Services() {
-        File file = new File("/etc/lapps/api.ini")
+//        File file = new File("/etc/lapps/api.ini")
+//        if (file.exists()) {
+//            configuration = new ConfigSlurper().parse(file.text)
+//        }
+//        else {
+//            logger.error("Unable to locate the configuration file.")
+//        }
+        if (!loadIniFile(("/etc/lapps/api.ini"))) {
+            if (!loadIniFile("/run/secrets/api.ini")) {
+                logger.error("Unable to locate a configuration file.")
+            }
+        }
+    }
+
+    private boolean loadIniFile(String path) {
+        File file = new File(path)
         if (file.exists()) {
             configuration = new ConfigSlurper().parse(file.text)
+            return true
         }
-        else {
-            logger.error("Unable to location the configuration file.")
-        }
+        return false
     }
 
     @GetMapping(path="/services", produces = 'text/html')
@@ -44,7 +58,7 @@ class Services {
             p 'Other nodes may be brought online in the future.'
             p {
                 span { b 'Note:'}
-                span '''The webservices may be running on other servers. The Brandeis 
+                span '''There may be LAPPS services running on other servers. The Brandeis 
                 and Vassar nodes are simply the servers that are running Service Manager
                 instances.'''
             }

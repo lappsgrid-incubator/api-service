@@ -9,6 +9,7 @@ The services available at `https://api.lappsgrid.org` are typically proof-of-con
 - [uuid](#uuid) - generates a type 4 UUID
 - [services](#services) - list all services installed on a particular node
 - [metadata](#metadata) - fetch the metadata for a given service
+- [docker](#docker) - list images on docker.lappsgrid.org
 - [soap-proxy](#soap-proxy) - RESTful proxy for LAPPS SOAP services
 - [json-compiler](#json-compiler) - compiles the LAPPS Alternate Syntax into JSON
 - [json-validator](#validator) - validates JSON documents agains the LAPPS JSON Schema
@@ -189,6 +190,29 @@ If an `Accept` header is not specified `application/json` will be returned.
 curl https://api.lappsgrid.org/metadata?id=anc:gate.tokenizer_2.2.0
 curl -H 'Accept: application/x-cmdi+xml' https://api.lappsgrid.org/metadata?id=anc:stanford.tagger_2.0.0
 ```
+
+<a name="docker"></a>
+
+## https://api.lappgrid.org/docker
+
+List Docker images available from *https://docker.lappsgrid.org*. **NOTE:** There is no Docker Hub style user interface at *docker.lappsgrid.org*.
+
+<table>
+    <tr>
+        <td style="width:20%"><b>Methods</b></td>
+        <td>GET</td>
+     </tr>
+     <tr>
+        <td><b>URL</b></td>
+        <td>/docker</td>
+     </tr>
+     <tr>
+        <td><b>Returns</b></td>
+        <td>
+            text/html
+        </td>
+     </tr>
+</table>
 
 <a name="soap-proxy"></a>
   

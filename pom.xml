@@ -15,7 +15,7 @@
     <description>Implementations of the services available from http://api.lappsgrid.org</description>
     <properties>
         <java.version>1.8</java.version>
-        <groovy.version>2.5.5</groovy.version>
+        <groovy.version>2.5.3</groovy.version>
     </properties>
     <url>https://github.com/lappsgrid-incubator/api-service</url>
     <licenses>
@@ -170,12 +170,12 @@
         <dependency>
             <groupId>org.anc.json</groupId>
             <artifactId>compiler</artifactId>
-            <version>1.3.0</version>
+            <version>1.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.anc.json</groupId>
             <artifactId>validator</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

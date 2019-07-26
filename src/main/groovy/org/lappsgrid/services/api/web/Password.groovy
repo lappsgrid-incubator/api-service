@@ -1,6 +1,5 @@
 package org.lappsgrid.services.api.web
 
-import com.sun.org.apache.regexp.internal.RE
 import org.lappsgrid.services.api.error.ApiError
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

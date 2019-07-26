@@ -64,7 +64,6 @@ class Docker {
         }
     }
 
-
     String get(String url) {
         try {
             return new URL(url).text

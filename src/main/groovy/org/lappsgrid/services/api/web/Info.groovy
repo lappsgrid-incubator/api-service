@@ -114,6 +114,12 @@ class Info {
                         td 'text/plain'
                         td 'Generates a type 4 UUID.  This just calls the UUID.randomUUID() Java method.'
                     }
+                    tr {
+                        td { a href:'/inception', '/inception' }
+                        td 'POST | GET'
+                        td '[201 CREATED] if the file was uploaded.'
+                        td 'Service used by INCEpTION to send files to LAPPS/Galaxy'
+                    }
                 }
             }
             p {

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse
 /**
  *
  */
-@RestController
+//@RestController
 class ApiErrorController implements ErrorController {
 
     private boolean debug = true

@@ -55,8 +55,8 @@ class ApiErrorController implements ErrorController {
     }
 
     private Map<String, Object> getErrorAttributes(HttpServletRequest request, boolean includeStackTrace) {
-        RequestAttributes requestAttributes = new ServletRequestAttributes(request);
-        return errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace);
+//        RequestAttributes requestAttributes = new ServletRequestAttributes(request)
+        return errorAttributes.getErrorAttributes(request, includeStackTrace);
     }
 
 }

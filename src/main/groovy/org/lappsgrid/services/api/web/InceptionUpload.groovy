@@ -70,7 +70,7 @@ class InceptionUpload {
         po.send("zip", output.toByteArray())
         po.close()
         response.setStatus(HttpStatus.CREATED.value())
-        return "OK"
+        return "CREATED\ns"
     }
 
     String addID(String json, String id) {

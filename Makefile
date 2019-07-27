@@ -1,6 +1,12 @@
 ROOT=$(shell pwd)
 JAR=api.jar
 CSS=src/main/resources/static/style/main.css
+REPO=docker.lappsgrid.org
+GROUP=lappsgrid
+NAME=api-service
+IMAGE=$(GROUP)/$(NAME)
+TARGET=target/$(JAR)
+TAG=$(REPO)/$(IMAGE)
 
 jar:
 	mvn compile
@@ -14,27 +20,28 @@ less:
 	lessc src/main/less/main.less $(CSS)
 
 docker:
-	cp target/api.jar src/main/docker
-	cd src/main/docker && docker build -t lappsgrid/api-service .
+	if [ ! -e src/main/docker/$(JAR) ] ; then cp $(TARGET) src/main/docker ; fi
+	if [ $(TARGET) -nt src/main/docker/$(JAR) ] ; then cp $(TARGET) src/main/docker ; fi
+	cd src/main/docker && docker build -t $(IMAGE) .
 
 run:
-	java -jar target/$(JAR)
+	java -jar $(TARGET)
 	
 start:
-	docker run -d -p 8080:8080 -v /private/etc/lapps:/etc/lapps --name api lappsgrid/api-service
+	docker run -d -p 8080:8080 -v /private/etc/lapps:/etc/lapps --name api $(IMAGE)
 
 stop:
 	docker rm -f api
 
 push:
-	docker push lappsgrid/api-service
+	docker tag $(IMAGE) $(TAG)
+	docker push $(TAG)
 
-deploy:
+deploy: push
 	os ssh services /root/services.sh update api
 
-all: clean jar docker push deploy
+all: clean less jar docker 
 
-run:
-	java -jar target/api.jar
+
 
 

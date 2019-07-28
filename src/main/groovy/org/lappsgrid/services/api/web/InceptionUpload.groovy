@@ -3,7 +3,9 @@ package org.lappsgrid.services.api.web
 import org.lappsgrid.rabbitmq.topic.PostOffice
 import org.lappsgrid.serialization.Data
 import org.lappsgrid.serialization.Serializer
+import org.lappsgrid.serialization.lif.Annotation
 import org.lappsgrid.serialization.lif.Container
+import org.lappsgrid.serialization.lif.View
 import org.lappsgrid.services.api.util.HTML
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -77,6 +79,15 @@ class InceptionUpload {
         Container container = Serializer.parse(json, Container)
         if (container.metadata.id == null) {
             container.metadata.id = id
+        }
+        for (View view : container.views) {
+            for (Annotation a : view.annotations) {
+                if (a.atType == Uri.NE) {
+                    if (a.features.category == null && a.label != null) {
+                        a.features.category = a.label
+                    }
+                }
+            }
         }
         return new Data(Uri.LIF, container).asJson()
     }

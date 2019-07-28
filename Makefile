@@ -37,7 +37,7 @@ push:
 	docker tag $(IMAGE) $(TAG)
 	docker push $(TAG)
 
-deploy: push
+deploy: 
 	os ssh services /root/services.sh update api
 
 all: clean less jar docker 

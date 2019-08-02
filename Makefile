@@ -38,10 +38,23 @@ push:
 	docker push $(TAG)
 
 deploy: 
-	os ssh services /root/services.sh update api
+	os ssh 149.165.157.51 root /root/services.sh update api
 
 all: clean less jar docker 
 
+help:
+	@echo "\nGOALS\n"
+	@echo "    jar    - generates an executable .jar file"
+	@echo "    less   - generates main.css from the main.less"
+	@echo "    clean  - removes build artifacts"
+	@echo "    docker - create the Docker image"
+	@echo "    run    - runs the jar file"
+	@echo "    start  - starts a Docker container"
+	@echo "    stop   - stops a running Docker container"
+	@echo "    push   - tags and pushes the Docker container to docker.lappsgrid.org"
+	@echo "    deploy - invokes the update script on the services instance."
+	@echo "    all    - cleans and builds the Docker container"
+	@echo "    help   - prints this help message.\n"
 
 
 

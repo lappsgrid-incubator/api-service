@@ -82,6 +82,11 @@ class InceptionUpload {
         }
         for (View view : container.views) {
             for (Annotation a : view.annotations) {
+                if (a.atType == Uri.TOKEN) {
+                    if (a.features.word == null) {
+                        a.features.word = text(container, a)
+                    }
+                }
                 if (a.atType == Uri.NE) {
                     if (a.features.category == null && a.label != null) {
                         a.features.category = a.label
@@ -103,4 +108,9 @@ class InceptionUpload {
         return new String(out.toByteArray(), "UTF-8")
     }
 
+    String text(Container container, Annotation a) {
+        int start = a.start.intValue()
+        int end = a.end.intValue()
+        return container.text.substring(start, end)
+    }
 }

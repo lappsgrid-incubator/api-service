@@ -115,6 +115,12 @@ class Info {
                         td 'Generates a type 4 UUID.  This just calls the UUID.randomUUID() Java method.'
                     }
                     tr {
+                        td { a href:'/docker', '/docker'}
+                        td 'GET'
+                        td 'text/html'
+                        td 'Lists the Docker container that have been deployed to docker.lappsgrid.org'
+                    }
+                    tr {
                         td { a href:'/inception', '/inception' }
                         td 'POST | GET'
                         td '[201 CREATED] if the file was uploaded.'

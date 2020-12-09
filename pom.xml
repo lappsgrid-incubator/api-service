@@ -15,7 +15,7 @@
     <description>Implementations of the services available from http://api.lappsgrid.org</description>
     <properties>
         <java.version>1.8</java.version>
-        <groovy.version>2.5.5</groovy.version>
+        <groovy.version>3.0.7</groovy.version>
     </properties>
     <url>https://github.com/lappsgrid-incubator/api-service</url>
     <licenses>
